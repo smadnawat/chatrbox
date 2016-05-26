@@ -7,6 +7,14 @@ Rails.application.routes.draw do
   get "change_user_status" => "apis/users#change_user_status"
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
+  resources :users, only: [:create, :update, :show] do
+    member do
+      # get "image"
+    end
+    collection do
+      # get "image"
+    end
+  end
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

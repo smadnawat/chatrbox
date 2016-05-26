@@ -14,7 +14,9 @@ ActiveAdmin.register User do
       status = resource.is_subscribed
       status_tag (status ? "Yes" : "No"), (status ? :ok : :error) 
     end  
-    column :image
+    column :image do |img|
+      image_tag img.image_url(:admin_index)
+    end
     column :created_at
     column "Actions" do |resource|
       links = ''.html_safe
@@ -39,7 +41,9 @@ ActiveAdmin.register User do
     row  :username
     row  :full_name
     row  :fb_location
-    row  :image
+    row  :image do |img|
+      image_tag img.image_url(:admin_show)
+    end
     row  :created_at
    end
 	end
