@@ -10,6 +10,10 @@ ActiveAdmin.register User do
       status = resource.is_active
       status_tag (status ? "Active" : "Deactive"), (status ? :ok : :error) 
     end  
+    column "Subscribed" do |resource|
+      status = resource.is_subscribed
+      status_tag (status ? "Yes" : "No"), (status ? :ok : :error) 
+    end  
     column :image
     column :created_at
     column "Actions" do |resource|

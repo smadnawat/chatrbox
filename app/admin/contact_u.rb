@@ -1,5 +1,6 @@
 ActiveAdmin.register ContactU do
-	actions :all, :except => [:destroy,:new,:create,:edit]
+	batch_action :destroy, false
+	actions :all, :except => [:new,:create,:edit]
   menu :priority => 5
   index do
     column :subject

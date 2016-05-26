@@ -49,11 +49,11 @@ ActiveRecord::Schema.define(version: 20160525093748) do
   add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
 
-  create_table "backgrouds", force: :cascade do |t|
-    t.string   "name",       default: ""
-    t.string   "image",      default: ""
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+  create_table "backgrounds", force: :cascade do |t|
+    t.string   "name"
+    t.string   "image"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "chatrooms", force: :cascade do |t|
@@ -141,13 +141,13 @@ ActiveRecord::Schema.define(version: 20160525093748) do
   create_table "users_chatrooms", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "chatroom_id"
-    t.integer  "backgroud_id"
-    t.boolean  "is_notified",  default: false
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.integer  "background_id"
+    t.boolean  "is_notified",   default: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
   end
 
-  add_index "users_chatrooms", ["backgroud_id"], name: "index_users_chatrooms_on_backgroud_id", using: :btree
+  add_index "users_chatrooms", ["background_id"], name: "index_users_chatrooms_on_background_id", using: :btree
   add_index "users_chatrooms", ["chatroom_id"], name: "index_users_chatrooms_on_chatroom_id", using: :btree
   add_index "users_chatrooms", ["user_id"], name: "index_users_chatrooms_on_user_id", using: :btree
 
@@ -170,7 +170,7 @@ ActiveRecord::Schema.define(version: 20160525093748) do
   add_foreign_key "friends", "users"
   add_foreign_key "messages", "users"
   add_foreign_key "subscriptions", "users"
-  add_foreign_key "users_chatrooms", "backgrouds"
+  add_foreign_key "users_chatrooms", "backgrounds"
   add_foreign_key "users_chatrooms", "chatrooms"
   add_foreign_key "users_chatrooms", "users"
   add_foreign_key "users_messages_chats", "chatrooms"

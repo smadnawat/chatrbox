@@ -1,5 +1,5 @@
 ActiveAdmin.register StaticPage do
-
+  permit_params :title, :content
 	actions :all, :except => [:new,:destroy, :show]
   menu :priority => 7
   index do
