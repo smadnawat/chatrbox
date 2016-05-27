@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160525093748) do
+ActiveRecord::Schema.define(version: 20160526110550) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -88,6 +88,15 @@ ActiveRecord::Schema.define(version: 20160525093748) do
   end
 
   add_index "friends", ["user_id"], name: "index_friends_on_user_id", using: :btree
+
+  create_table "gadgets", force: :cascade do |t|
+    t.string   "gadget_id",  default: ""
+    t.integer  "user_id"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  add_index "gadgets", ["user_id"], name: "index_gadgets_on_user_id", using: :btree
 
   create_table "locations", force: :cascade do |t|
     t.string   "name",       default: ""
@@ -168,6 +177,7 @@ ActiveRecord::Schema.define(version: 20160525093748) do
   add_foreign_key "chatrooms", "locations"
   add_foreign_key "contact_us", "users"
   add_foreign_key "friends", "users"
+  add_foreign_key "gadgets", "users"
   add_foreign_key "messages", "users"
   add_foreign_key "subscriptions", "users"
   add_foreign_key "users_chatrooms", "backgrounds"

@@ -4,6 +4,7 @@ gem 'activeadmin', github: 'activeadmin'
 gem 'devise'
 gem 'carrierwave'
 gem 'cloudinary'
+gem 'will_paginate', '~> 3.1.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.5'
 # Use postgresql as the database for Active Record
