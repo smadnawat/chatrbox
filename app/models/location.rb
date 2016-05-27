@@ -1,6 +1,7 @@
 require 'will_paginate/array'
 class Location < ActiveRecord::Base
-	validates_presence_of :name, :flag_image
+	validates_presence_of :name
+	validates_presence_of :flag_image , message: "Please select file"
 	mount_uploader :flag_image, AvatarUploader
 
 	def self.all_locations user, page, size
