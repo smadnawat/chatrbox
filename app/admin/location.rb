@@ -1,6 +1,6 @@
 ActiveAdmin.register Location do
 	permit_params :name, :flag_image
-	actions :all, :except => [:destroy]
+	# actions :all, :except => [:destroy]
   menu :priority => 6
   index do
     column :name
