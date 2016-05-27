@@ -18,7 +18,7 @@ ActiveAdmin.register Chatroom do
 	  f.inputs do
 	    f.input :name
 	    f.input :image,:as => :file
-	    f.input :location, input_html: {include_blank: false}
+      f.input :location_id, :label => 'Location', :as => :select, :collection => Location.all.map{|u| ["#{u.name}", u.id]}, prompt: "Select"
 	    end
 	  f.actions
   end

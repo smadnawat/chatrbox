@@ -1,5 +1,5 @@
 class Apis::UsersController < ApplicationController
-	before_action :find_user, only: [:sign_out, :about, :term, :faq, :get_location]
+	before_action :find_user, only: [:sign_out, :get_location]
 	# create user adn log into the app
 	def create
 		user = User.where(fb_id: params[:users][:fb_id]).first
@@ -34,7 +34,11 @@ class Apis::UsersController < ApplicationController
 	def faq; render json: {code: 200, message: "successfully fetched faq", faq: StaticPage.where(title: "FAQ").last.as_json(only: [:title, :content])}; end
 	# list of all location from backend
 	def get_location
-		render json: {code: 200, message: "successfully fetched faq", locations: Location.all_locations(@user, params[:page], params[:size]) }#.merge(user: @user.id) } #.as_json(only: [:name, :flag_image])
+		render json: {code: 200, message: "successfully fetched faq",locations: Location.all_locations(@user, params[:page], params[:size]) }
+	end
+	# list of all chatroom from backend
+	def get_chatroom
+		render json: {code: 200, message: "successfully fetched faq", locations: Chatroom.all_chatrooms(@user, params[:page], params[:size]) }
 	end
 	# call from admin panel to update user status
 	def change_user_status

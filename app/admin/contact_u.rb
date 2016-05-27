@@ -1,4 +1,4 @@
-ActiveAdmin.register ContactU do
+ActiveAdmin.register ContactU, as: "Contact Us" do
 	batch_action :destroy, false
 	actions :all, :except => [:new,:create,:edit]
   menu :priority => 5
@@ -12,7 +12,7 @@ ActiveAdmin.register ContactU do
 
   filter :subject
 
-  show do |ad|
+  show :title => "Contact Us" do
     attributes_table do	 
     row  :subject 
     row  :description

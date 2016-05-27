@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       get "faq"
       get "term"
       get "get_location"
+      get "get_chatroom"
     end
     collection do
     end

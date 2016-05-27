@@ -6,4 +6,8 @@ class Chatroom < ActiveRecord::Base
 	has_many :users_chatrooms, dependent: :destroy
 	has_many :users, through: :users_chatrooms
 	mount_uploader :image, AvatarUploader
+
+	def self.all_chatrooms user, page, size
+		all.order('name asc').paginate(:page => page, :per_page => size).map{|x| x.slice('id', 'name', 'image') }
+	end
 end

@@ -4,6 +4,6 @@ class Location < ActiveRecord::Base
 	mount_uploader :flag_image, AvatarUploader
 
 	def self.all_locations user, page, size
-		all.order('name asc').paginate(:page => page, :per_page => size).map{|x| x.slice('id', 'name', 'flag_image').merge(is_selected: user.is_subscribed) }
+		all.order('name asc').paginate(:page => page, :per_page => size).map{|x| x.slice('id', 'name', 'flag_image') }
 	end
 end
