@@ -10,6 +10,11 @@ class Chatroom < ActiveRecord::Base
 	validates_presence_of :location_id, message: "Please select location"
 
 	def self.all_chatrooms user, page, size
-		all.order('name asc').paginate(:page => page, :per_page => size).map{|x| x.slice('id', 'name', 'image') }
+		chatrooms = all.order('name asc').paginate(:page => page, :per_page => size)
+		[chatrooms.map{ |x| x.slice('id', 'name', 'image') }, Paging.set_page(page, size, chatrooms)]
+	end
+
+	def self.find_chatroom id
+		where(id: id).last
 	end
 end

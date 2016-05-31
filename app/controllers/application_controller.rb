@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   end
 
 	def find_user
-		@user = User.where(id: params[:id], authentication_token: request.headers["HTTP_AUTHENTICATION_TOKEN"], is_active: true).last
+		@user = User.where(id: params[:id], authentication_token: request.headers["HTTP_TOKEN"], is_active: true).last
 		return get_response 500, "you are not authorise user to perform this action" if !@user.present?
 	end
 
