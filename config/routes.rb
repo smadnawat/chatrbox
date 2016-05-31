@@ -10,7 +10,7 @@ Rails.application.routes.draw do
       get "get_location"
       get "get_background"
       get "get_chatroom", controller: "apis/chatrooms"
-      get "add_chatroom", controller: "apis/chatrooms"
+      post "add_chatroom", controller: "apis/chatrooms"
       post "contact_us", controller: "apis/contacts"
     end
     collection do

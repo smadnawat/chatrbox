@@ -1,7 +1,10 @@
 class User < ActiveRecord::Base
 
 	has_one :subscription, dependent: :destroy
-	has_one :location, dependent: :destroy
+	# has_one :users_location
+	# has_one :location, through: :users_location
+	has_and_belongs_to_many :locations, join_table: "users_locations"
+	before_destroy {locations.clear}
 	has_many :contact_us, dependent: :destroy
 	has_many :gadgets, dependent: :destroy
 	has_many :friends, dependent: :destroy
