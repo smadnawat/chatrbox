@@ -11,11 +11,16 @@ class User < ActiveRecord::Base
 	has_many :users_chatrooms, dependent: :destroy
 	has_many :chatrooms, through: :users_chatrooms
 	has_many :users_messages_chats, dependent: :destroy
-	has_many :messages, through: :users_messages_chats
+	has_many :messages, dependent: :destroy
+	# has_many :messages, through: :users_messages_chats
 	mount_uploader :image, AvatarUploader
 
 	validates_presence_of :fb_id
 	validates_uniqueness_of :username
+
+	def self.find_by_fb_id id
+		find_by(fb_id: id)
+	end
 
 	def self.image_data(data)
     return nil unless data

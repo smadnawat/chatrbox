@@ -1,4 +1,3 @@
-require 'will_paginate/array'
 class Location < ActiveRecord::Base
 	# has_one :users_location
 	# has_one :user, through: :users_location

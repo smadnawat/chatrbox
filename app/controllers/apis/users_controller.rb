@@ -1,26 +1,35 @@
 class Apis::UsersController < ApplicationController
-	before_action :find_user, only: [:sign_out, :get_location, :get_chatroom]
+	before_action :find_user, only: [:sign_out, :get_location, :get_chatroom, :update]
 	
+	# check user exist or not
+	def login
+		user = User.find_by_fb_id(params[:fb_id])
+		if user
+			Gadget.find_and_create_gadget(user, params[:gadget_id]) if params[:gadget_id].present?
+			render json: {code: 200, message: "successfully logged in", user: user.as_json.merge(is_exist: true) }
+		else
+			render json: {code: 500, message: "user does not exist", is_exist: false}
+		end
+	end
+
 	# create user adn log into the app
 	def create
-		user = User.where(fb_id: params[:users][:fb_id]).first
-		if user.present?
-			user.email = params[:users][:email] if params[:users][:email].present?
-			user.username = params[:users][:username] if params[:users][:username].present?
-			user.full_name = params[:users][:full_name] if params[:users][:full_name].present?
-			user.fb_location = params[:users][:fb_location] if params[:users][:fb_location].present?
-			user.image = User.image_data(params[:users][:image]) if params[:users][:image].present?
-			user.profile_status = params[:users][:profile_status] if params[:users][:profile_status].present?
-			user.authentication_token = Time.now.to_i.to_s+SecureRandom.hex
-		else
-			user = User.new(users_params)
-		end
+		user = User.new(users_params)
 		if user.save
-			gadget = user.gadgets.where(gadget_id: params[:users][:gadget_id]).first
-			user.gadgets.create(gadget_id: params[:users][:gadget_id]) if !(gadget.present?&&params[:users][:gadget_id].present?)
+			Gadget.find_and_create_gadget(user, params[:users][:gadget_id]) if !params[:users][:gadget_id].present?
 			render json: {code: 200, message: "successfully logged in", user: user}
 		else
 			get_response 500, user.errors.full_messages.first.capitalize.to_s.gsub('_',' ') + "."
+		end
+	end
+
+	# update the user
+	def update
+		user = @user.update(users_params)
+		if user
+			render json: {code: 200, message: "successfully logged in", user: @user}
+		else
+			get_response 500, @user.errors.full_messages.first.capitalize.to_s.gsub('_',' ') + "."
 		end
 	end
 	
