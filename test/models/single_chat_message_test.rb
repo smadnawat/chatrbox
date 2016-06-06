@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class UsersMessagesChatTest < ActiveSupport::TestCase
+class SingleChatMessageTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

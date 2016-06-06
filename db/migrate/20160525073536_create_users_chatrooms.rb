@@ -4,7 +4,7 @@ class CreateUsersChatrooms < ActiveRecord::Migration
       t.references :user, index: true, foreign_key: true
       t.references :chatroom, index: true, foreign_key: true
       t.references :background, index: true, foreign_key: true
-      t.boolean :is_notified, default: false
+      t.boolean :is_notified, default: true
 
       t.timestamps null: false
     end

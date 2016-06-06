@@ -1,5 +1,5 @@
 class Apis::UsersController < ApplicationController
-	before_action :find_user, only: [:sign_out, :get_location, :get_chatroom, :update]
+	before_action :find_user, only: [:sign_out, :get_chatroom, :update, :get_background, :show]
 	
 	# check user exist or not
 	def login
@@ -16,6 +16,7 @@ class Apis::UsersController < ApplicationController
 	def create
 		user = User.new(users_params)
 		if user.save
+			user.locations << Location.find_by_id(params[:location_id]) if !(params[:location_id].present? and user.locations.present?)
 			Gadget.find_and_create_gadget(user, params[:users][:gadget_id]) if !params[:users][:gadget_id].present?
 			render json: {code: 200, message: "successfully logged in", user: user}
 		else
@@ -31,6 +32,11 @@ class Apis::UsersController < ApplicationController
 		else
 			get_response 500, @user.errors.full_messages.first.capitalize.to_s.gsub('_',' ') + "."
 		end
+	end
+
+	# get user profile
+	def show
+		render json: {code: 200, message: "successfully fetched profile", profile: @user}
 	end
 	
 	# sign out user with delete its authentication token
@@ -48,14 +54,8 @@ class Apis::UsersController < ApplicationController
 	
 	# list of all location from backend
 	def get_location
-		get_locations = Location.all_locations(@user, params[:page], params[:size])
-		render json: {code: 200, message: "successfully fetched locations",locations: get_locations.first, pagination: get_locations.last }
-	end
-	
-	# list of all chatroom from backend
-	def get_chatroom
-		chatroom = Chatroom.all_chatrooms(@user, params[:page], params[:size])
-		render json: {code: 200, message: "successfully fetched chatrooms", locations: chatroom.first , pagination: chatroom.last }
+		# get_locations = Location.all_locations(params[:page], params[:size])
+		render json: {code: 200, message: "successfully fetched locations", locations: Location.all_locations }
 	end
 	
 	# list of all background from backend

@@ -1,0 +1,2 @@
+module Apis::FriendsHelper
+end

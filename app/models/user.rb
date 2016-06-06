@@ -10,8 +10,9 @@ class User < ActiveRecord::Base
 	has_many :friends, dependent: :destroy
 	has_many :users_chatrooms, dependent: :destroy
 	has_many :chatrooms, through: :users_chatrooms
-	has_many :users_messages_chats, dependent: :destroy
+	# has_many :users_messages_chats, dependent: :destroy
 	has_many :messages, dependent: :destroy
+	has_many :single_chat_messages, dependent: :destroy
 	# has_many :messages, through: :users_messages_chats
 	mount_uploader :image, AvatarUploader
 

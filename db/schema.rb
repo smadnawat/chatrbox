@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160531111117) do
+ActiveRecord::Schema.define(version: 20160604094223) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,13 +80,17 @@ ActiveRecord::Schema.define(version: 20160531111117) do
 
   create_table "friends", force: :cascade do |t|
     t.integer  "user_id"
+    t.integer  "background_id"
+    t.boolean  "is_notified",   default: true
     t.integer  "member_id"
-    t.boolean  "is_paid",    default: false
-    t.boolean  "is_block",   default: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.boolean  "is_paid",       default: false
+    t.boolean  "is_block",      default: false
+    t.boolean  "is_added",      default: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
   end
 
+  add_index "friends", ["background_id"], name: "index_friends_on_background_id", using: :btree
   add_index "friends", ["user_id"], name: "index_friends_on_user_id", using: :btree
 
   create_table "gadgets", force: :cascade do |t|
@@ -107,13 +111,30 @@ ActiveRecord::Schema.define(version: 20160531111117) do
 
   create_table "messages", force: :cascade do |t|
     t.integer  "user_id"
-    t.text     "content",    default: ""
-    t.string   "media",      default: ""
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.integer  "chatroom_id"
+    t.text     "content",     default: ""
+    t.string   "media",       default: ""
+    t.text     "is_read",     default: [],              array: true
+    t.text     "is_delete",   default: [],              array: true
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
+  add_index "messages", ["chatroom_id"], name: "index_messages_on_chatroom_id", using: :btree
   add_index "messages", ["user_id"], name: "index_messages_on_user_id", using: :btree
+
+  create_table "single_chat_messages", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "member_id"
+    t.text     "message",    default: ""
+    t.string   "media",      default: ""
+    t.boolean  "is_read",    default: false
+    t.boolean  "is_delete",  default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "single_chat_messages", ["user_id"], name: "index_single_chat_messages_on_user_id", using: :btree
 
   create_table "static_pages", force: :cascade do |t|
     t.string   "title",      default: ""
@@ -151,9 +172,9 @@ ActiveRecord::Schema.define(version: 20160531111117) do
     t.integer  "user_id"
     t.integer  "chatroom_id"
     t.integer  "background_id"
-    t.boolean  "is_notified",   default: false
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.boolean  "is_notified",   default: true
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
   end
 
   add_index "users_chatrooms", ["background_id"], name: "index_users_chatrooms_on_background_id", using: :btree
@@ -165,30 +186,16 @@ ActiveRecord::Schema.define(version: 20160531111117) do
     t.integer "location_id"
   end
 
-  create_table "users_messages_chats", force: :cascade do |t|
-    t.integer  "message_id"
-    t.integer  "user_id"
-    t.integer  "chatroom_id"
-    t.boolean  "is_read",     default: false
-    t.boolean  "is_delete",   default: false
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-  end
-
-  add_index "users_messages_chats", ["chatroom_id"], name: "index_users_messages_chats_on_chatroom_id", using: :btree
-  add_index "users_messages_chats", ["message_id"], name: "index_users_messages_chats_on_message_id", using: :btree
-  add_index "users_messages_chats", ["user_id"], name: "index_users_messages_chats_on_user_id", using: :btree
-
   add_foreign_key "chatrooms", "locations"
   add_foreign_key "contact_us", "users"
+  add_foreign_key "friends", "backgrounds"
   add_foreign_key "friends", "users"
   add_foreign_key "gadgets", "users"
+  add_foreign_key "messages", "chatrooms"
   add_foreign_key "messages", "users"
+  add_foreign_key "single_chat_messages", "users"
   add_foreign_key "subscriptions", "users"
   add_foreign_key "users_chatrooms", "backgrounds"
   add_foreign_key "users_chatrooms", "chatrooms"
   add_foreign_key "users_chatrooms", "users"
-  add_foreign_key "users_messages_chats", "chatrooms"
-  add_foreign_key "users_messages_chats", "messages"
-  add_foreign_key "users_messages_chats", "users"
 end
