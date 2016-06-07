@@ -8,7 +8,7 @@ class Background < ActiveRecord::Base
  	validates :name, length: { maximum: 28,
                                  too_long: "Name must not exceed %{count} characters" }
     # validates_format_of :name, :with => /[^a-eg-z]/
-    validates   :name , format:{ with: /[\w\-\']+([\s]+[\w\-\']){1}/,
+    validates   :name , format:{ with: /\A[a-zA-Z0-9]+\Z/,
                             message: 'Please Enter Characters only!!' } 
 	def self.all_backgrounds user, page, size
 		backgrounds = all.order('name asc').paginate(:page => page, :per_page => size)
