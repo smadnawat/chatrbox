@@ -7,9 +7,17 @@ class Chatroom < ActiveRecord::Base
 	has_many :users_chatrooms, dependent: :destroy
 	has_many :users, through: :users_chatrooms
 	mount_uploader :image, AvatarUploader
-	validates_presence_of :name
+	# validates_presence_of :name
 	validates_presence_of :image , message: "Please select file"
 	validates_presence_of :location_id, message: "Please select location"
+
+	validates :name, length: { minimum: 2,
+                                 too_short: "Minimum length should be %{count} " }
+ 	validates :name, length: { maximum: 28,
+                                 too_long: "Name must not exceed %{count} characters" }
+    # validates_format_of :name, :with => /[^a-eg-z]/
+    validates   :name , format:{ with: /[\w\-\']+([\s]+[\w\-\']){1}/,
+                            message: 'Please Enter Characters only!!' } 
 
 	def self.all_chatrooms user
 		all.order('name asc').map{ |x| x.slice('id', 'name', 'image').merge(is_selected: user.chatrooms.include?(x)) }

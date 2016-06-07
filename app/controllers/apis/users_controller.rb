@@ -16,7 +16,7 @@ class Apis::UsersController < ApplicationController
 	def create
 		user = User.new(users_params)
 		if user.save
-			user.locations << Location.find_by_id(params[:location_id]) if !(params[:location_id].present? and user.locations.present?)
+			user.locations << Location.find_by_id(params[:users][:location_id]) if params[:users][:location_id].present? #and !user.locations.present?)
 			Gadget.find_and_create_gadget(user, params[:users][:gadget_id]) if !params[:users][:gadget_id].present?
 			render json: {code: 200, message: "successfully logged in", user: user}
 		else
@@ -36,7 +36,7 @@ class Apis::UsersController < ApplicationController
 
 	# get user profile
 	def show
-		render json: {code: 200, message: "successfully fetched profile", profile: @user}
+		render json: {code: 200, message: "successfully fetched profile", profile: @user.as_json.merge( location: @user.locations.last ) }
 	end
 	
 	# sign out user with delete its authentication token
