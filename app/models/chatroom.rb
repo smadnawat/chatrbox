@@ -16,8 +16,8 @@ class Chatroom < ActiveRecord::Base
  	validates :name, length: { maximum: 28,
                                  too_long: "Name must not exceed %{count} characters" }
     # validates_format_of :name, :with => /[^a-eg-z]/
-    validates   :name , format:{ with: /\A[a-zA-Z0-9]+\Z/ ,
-                            message: 'Please Enter Characters only!!' } 
+    # validates   :name , format:{ with: /\A[a-zA-Z0-9]+\Z/ ,
+    #                         message: 'Please Enter Characters only!!' } 
 
 	def self.all_chatrooms user
 		all.order('name asc').map{ |x| x.slice('id', 'name', 'image').merge(is_selected: user.chatrooms.include?(x)) }
