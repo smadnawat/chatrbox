@@ -1,6 +1,6 @@
 ActiveAdmin.register Background do
 	permit_params :name, :image
-	actions :all, :except => [:destroy]
+	# actions :all, :except => [:destroy]
   menu :priority => 4
   index do
     column :name

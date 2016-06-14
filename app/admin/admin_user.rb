@@ -1,6 +1,6 @@
 ActiveAdmin.register AdminUser do
-  permit_params :email, :password, :password_confirmation
-  actions :all, :except => [:destroy]
+  permit_params :email, :password, :password_confirmation ,:role
+  #actions :all, :except => [:destroy]
   menu :priority => 2
   index do
     # selectable_column
@@ -22,5 +22,15 @@ ActiveAdmin.register AdminUser do
     end
     f.actions
   end
+
+  controller do
+    def scoped_collection
+      AdminUser.where(:role => "admin_user")
+    end
+  end
+
+
+
+
 
 end

@@ -1,6 +1,6 @@
 ActiveAdmin.register Chatroom do
 	permit_params :name, :image, :status, :is_multiple, :location_id
-	actions :all, :except => [:destroy]
+	# actions :all, :except => [:destroy]
   menu :priority => 3
   index do
     column :name
