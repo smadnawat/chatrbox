@@ -757,11 +757,11 @@ form fieldset > ol > li.hidden {
   padding: 0;
 }
 /* line 200, /home/vineet.sahu/.rvm/gems/ruby-2.3.0/bundler/gems/activeadmin-cce908d9793b/app/assets/stylesheets/active_admin/_forms.scss */
-form fieldset > ol > li p.inline-errors {
+/*form fieldset > ol > li p.inline-errors {
   color: #932419;
   font-weight: bold;
   margin: 0.3em 0 0 20%;
-}
+}*/
 /* line 205, /home/vineet.sahu/.rvm/gems/ruby-2.3.0/bundler/gems/activeadmin-cce908d9793b/app/assets/stylesheets/active_admin/_forms.scss */
 form fieldset > ol > li ul.errors {
   color: #932419;

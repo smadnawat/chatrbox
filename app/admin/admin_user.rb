@@ -16,11 +16,11 @@ ActiveAdmin.register AdminUser do
 
   form do |f|
     f.inputs "Admin Details" do
-      f.input :email ,input_html: { autofocus: true }
-      f.input :password
+      f.input :email ,input_html: { autofocus: true }, placeholder: "Please enter email id"
+      f.input :password ,placeholder: "Please enter password"
       f.input :password_confirmation
     end
-    f.actions
+    f.actions 
   end
 
   controller do
