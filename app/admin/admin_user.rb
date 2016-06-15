@@ -15,10 +15,14 @@ ActiveAdmin.register AdminUser do
   filter :email
 
   form do |f|
+
     f.inputs "Admin Details" do
       f.input :email ,input_html: { autofocus: true }, placeholder: "Please enter email id"
-      f.input :password ,placeholder: "Please enter password"
+      div id:"err_email"
+      f.input :password,placeholder: "Please enter password"
+         div id:"err_password" 
       f.input :password_confirmation
+       div id:"err_password_conf" 
     end
     f.actions 
   end
@@ -28,9 +32,6 @@ ActiveAdmin.register AdminUser do
       AdminUser.where(:role => "admin_user")
     end
   end
-
-
-
 
 
 end

@@ -22428,10 +22428,52 @@ return $.widget( "ui.tabs", {
   });
 
 }).call(this);
-(function() {
+
+  // $(document).ready(function() {
+  //   //alert($("#admin_user_email").val());
+  
+  //   // // Setup form validation on the #register-form element
+  //   $("#new_admin_user").validate({
+    
+  //       // Specify the validation rules
+  //       rules: {
+          
+  //           "admin_user[email]": {
+  //               required: true,
+  //               email: true
+  //           },
+  //           "admin_user[passsword]": {
+  //               required: true,
+  //               minlength: 6
+  //           }
+  //       },
+        
+  //       // Specify the validation error messages
+  //       messages: {
+  //          "admin_user[email]" :{ 
+  //          	required: "Email addres should not blan."
+
+  //          	email:"Please enter valid email id."
+  //          },
+          
+  //           "admin_user[password]": {
+  //               required: "Password should not be blank.",
+  //               minlength: "Password must be contain 6 characters."
+  //           }
+            
+  //       },
+        
+  //       submitHandler: function(form) {
+  //           form.submit();
+  //       }
+  //   });
+
+  // });
+  // 
+;
 
 
-}).call(this);
+
 (function() {
 
 
