@@ -69,6 +69,15 @@ class Apis::UsersController < ApplicationController
 		User.where(id: params[:format]).first.update(is_active: params[:status])
 		redirect_to :back, :notice => "status updated successfully"
 	end
+
+
+	# #list of all user's friend
+
+	# def my_friends
+	# 	friends = Friends.where(user_id:  params[:id] , member_id: params[:id])
+	# 	render json:{code:200, message: "successfully fetched usser's friends", my_friends: friends}
+
+	# end
 	
 	# private methods
 	private
