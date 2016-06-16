@@ -8,7 +8,7 @@ ActiveAdmin.register User do
     column :fb_location
     column "Status" do |resource|
       status = resource.is_active
-      status_tag (status ? "Active" : "Deactive"), (status ? :ok : :error) 
+      status_tag (status ? "Activate" : "Deactivate"), (status ? :ok : :error) 
     end  
     column "Subscribed" do |resource|
       status = resource.is_subscribed
@@ -21,10 +21,10 @@ ActiveAdmin.register User do
     column "Actions" do |resource|
       links = ''.html_safe
       a do
-        resource.is_active ? (links += link_to 'Deactive', change_user_status_path(resource, status: false),
-        :data => { :confirm => 'Are you sure, you want to deactive this profile?' }) : 
-        (links += link_to 'Active', change_user_status_path(resource, status: true),
-        :data => { :confirm => 'Are you sure, you want to active this profile?' })
+        resource.is_active ? (links += link_to 'Deactivate', change_user_status_path(resource, status: false),
+        :data => { :confirm => 'Are you sure, you want to deactivate this profile?' }) : 
+        (links += link_to 'Activate', change_user_status_path(resource, status: true),
+        :data => { :confirm => 'Are you sure, you want to activate this profile?' })
         links += " | "
         links += link_to 'Show', admin_user_path(resource)
       end

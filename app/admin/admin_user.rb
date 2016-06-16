@@ -23,14 +23,33 @@ ActiveAdmin.register AdminUser do
     f.actions
   end
 
-  controller do
-    def scoped_collection
-      AdminUser.where(:role => "admin_user")
-    end
-  end
+  # controller do
+  #   def scoped_collection
+  #     AdminUser.where(:role => "admin_user")
+  #   end
+  # end
 
 
 
 
 
 end
+
+
+  #     if(AdminUser.role == "admin_user")
+  #       {
+  #      controller do
+  #         def scoped_collection
+  #           AdminUser.where(:role => "admin_user")
+  #         end
+  #       end
+  #       }
+
+  #     else
+
+  #     end
+  # # controller do
+  # #   def scoped_collection
+  # #     AdminUser.where(:role => "admin_user")
+  # #   end
+  # # end
