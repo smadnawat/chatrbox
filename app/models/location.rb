@@ -9,6 +9,7 @@ class Location < ActiveRecord::Base
 	# validates_presence_of :name
 	validates_presence_of :flag_image , message: "Please select file"
 	mount_uploader :flag_image, AvatarUploader
+	
 
 	validates :name, length: { minimum: 2,
                                  too_short: "Minimum length should be %{count} " }

@@ -6,8 +6,6 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password',role: 'super_admin')
-AdminUser.create!(email: 'admin@chatr.com', password: 'password', password_confirmation: 'password',role: 'admin_user')
-
 StaticPage.create(title: "Term and Policy", content: "content")
 StaticPage.create(title: "About", content: "content")
 StaticPage.create(title: "FAQ", content: "content")
