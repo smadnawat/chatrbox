@@ -67,7 +67,7 @@
 
         var email_check = reg.test(email);
 
-        if(email == ""){email_error = "Email Id an't be blank";}
+        if(email == ""){email_error = "Email Id can't be blank";}
         else{if(!email_check){email_error = "Invalid email format";}}          
         if(pass  == "" ){pass_error = " Password can't be blank";}
          
@@ -84,7 +84,9 @@
         $("#admin_user_email").append("<span class= 'email-error' style='color:red;padding-left:90px;'></span>");
         e.preventDefault();
         var a = validateForgetForm();
-        if(a){$('#new_admin_user').submit();}    
+        if(a){
+          $('#new_admin_user').submit();
+        }    
     });
     
     function validateForgetForm(){
