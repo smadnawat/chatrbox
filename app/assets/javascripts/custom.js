@@ -135,6 +135,9 @@
 
 $(document).ready(function(){
 
+  $("#admin_user_email_input").append("<p class= 'email-error inline-errors' ></p>");
+    $("#admin_user_password_input").append("<p class= 'pass-error inline-errors'></p>");
+    $("#admin_user_password_confirmation_input").append("<p class= 'cpass-error inline-errors' ></p>");
 
      $("#error_explanation").text("").hide();
      $("#error_explanation > ul > li").text("").hide();
@@ -151,8 +154,7 @@ $(document).ready(function(){
     function validateForm(){
 
 
-    $("#admin_user_email_input").append("<span class= 'email-error' style='color:red;padding-left:90px;'></span>");
-    $("#admin_user_password_input").append("<span class= 'pass-error' style='color:red;padding-left:90px;'></span>");
+   
    
       
         var email = $('#admin_user_email').val().trim();
@@ -208,9 +210,7 @@ $(document).ready(function(){
     function validateNewAdminForm()
     {
 
-    $("#admin_user_email_input").append("<span class= 'email-error' style='color:red; padding-left:310px;'></span>");
-    $("#admin_user_password_input").append("<span class= 'pass-error' style='color:red;padding-left:310px;'></span>");
-    $("#admin_user_password_confirmation_input").append("<span class= 'cpass-error' style='color:red; padding-left:310px;'></span>");
+   
         var email = $('#admin_user_email').val().trim();
         var pass  = $('#admin_user_password').val().trim();
         var cpass  = $('#admin_user_password_confirmation').val().trim();
@@ -219,7 +219,7 @@ $(document).ready(function(){
         var email_check = reg.test(email);
 
         if(email == ""){
-          document.getElementsByClassName("email-error")[0].innerHTML = "Email id can't be blankoooo";
+          document.getElementsByClassName("email-error")[0].innerHTML = "Email id can't be blank";
           return true;
         }
         else if(!email_check){
@@ -265,7 +265,7 @@ $(document).ready(function(){
 
     function validateForgetForm(){
 
-    $("#admin_user_email_input").append("<span class= 'email-error' style='color:red; padding-left:90px;'></span>");
+   // $("#admin_user_email_input").append("<span class= 'email-error' style='color:red; padding-left:90px;'></span>");
 
         var email = $('#admin_user_email').val().trim();
         var email_error = "";
@@ -285,8 +285,6 @@ $(document).ready(function(){
      {
 
   
-    $("#admin_user_password_input").append("<span class= 'pass-error' style='color:red; padding-left:90px;'></span>");
-    $("#admin_user_password_confirmation_input").append("<span class= 'cpass-error' style='color:red;'></span>");
       var pass_error="";
       var cpass_error="";
        var pass  = $('#admin_user_password').val().trim();
