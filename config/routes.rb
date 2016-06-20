@@ -18,13 +18,27 @@ Rails.application.routes.draw do
       post "create_chatroom_message", controller: "apis/chatrooms"
       post "add_chatroom", controller: "apis/chatrooms"
       post "contact_us", controller: "apis/contacts"
+
+      get 'get_friend_messages',controller: "apis/friends"
+      get 'change_single_chat_background',controller: "apis/friends"
+      get 'get_my_friends_list',controller: "apis/friends"
+      post 'send_message_to_friend',controller: "apis/friends"
+      post 'add_block_friend',controller: "apis/friends"
     end
     collection do
-      post "login"
+      post "login" 
       get "get_location"
       get "about"
       get "faq"
       get "term"
+    end
+  end
+
+  resources :friends , :controller => "apis/friends", except:[:index,:new,:create,:edit,:show,:update,:destroy] do
+    member do
+
+    end
+    collection do
     end
   end
 

@@ -17,6 +17,7 @@ class ApplicationController < ActionController::Base
 	end
 	def find_member
 		@member = User.find_by_id(params[:member_id])
+		
 		return get_response 500, "member not found" if !@member.present?
 	end
 

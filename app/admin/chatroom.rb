@@ -1,6 +1,7 @@
 ActiveAdmin.register Chatroom do
 	permit_params :name, :image, :status, :is_multiple, :location_id
 	# actions :all, :except => [:destroy]
+  config.batch_actions = true
   menu :priority => 3
   index do
     column :name

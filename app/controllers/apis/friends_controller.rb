@@ -34,9 +34,18 @@ class Apis::FriendsController < ApplicationController
 		get_response 200, "successfully updated background"
 	end
 
+
+	def get_my_friends_list
+
+		
+	end
+
 	private
 	def single_chat_message_params user
-		params[:single_chat_message][:user_id] = user.id
-		params.require(:single_chat_message).permit(:member_id, :message, :media)
+
+		p "===========================#{@user.id}==========================="
+		params[:single_chat_message][:user_id] = @user.id
+		params[:single_chat_message][:member_id] = @member.id
+		params.require(:single_chat_message).permit(:member_id, :message, :media,:user_id)
 	end
 end

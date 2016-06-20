@@ -1,6 +1,7 @@
 ActiveAdmin.register AdminUser do
   permit_params :email, :password, :password_confirmation ,:role
   #actions :all, :except => [:destroy]
+  config.batch_actions = true
   menu :priority => 2
   index do
     # selectable_column
