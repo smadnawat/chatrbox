@@ -19,7 +19,7 @@ class Apis::ChatroomsController < ApplicationController
 	# my chatroom list
 	def my_chatroom
 		chatroom = @user.chatrooms.includes(:messages).order('name asc').paginate(:page => params[:page], :per_page => params[:size])
-		chatroom = chatroom.map{|x| (x.slice('id', 'name', 'image').merge(last_message: x.messages.order('created_at desc').reverse.last.as_json(only: [:content]), unread_count: (x.messages.where("'?' != ANY (is_read)", @user.id).count) ) ) }.paginate(:page => params[:page], :per_page => params[:size])
+		chatroom = chatroom.map{|x| (x.slice('id', 'name', 'image').merge(last_message: x.messages.order('created_at desc').reverse.last.as_json(only: [:content]), unread_count: (x.messages.where("'?' = ANY (is_read)", @user.id).count) ) ) }.paginate(:page => params[:page], :per_page => params[:size])
 		render json: {code: 200, message: "successfully fetched my chatrooms", my_chatrooms: chatroom, pagination: Paging.set_page(params[:page], params[:size], chatroom ) }
 	end
 
@@ -48,7 +48,9 @@ class Apis::ChatroomsController < ApplicationController
 		chatroom_messages = @chatroom.messages.includes(:user).map{|x| x.slice('id', 'user_id', 'chatroom_id', 'content' ,'created_at').merge(user: x.user.username) }.sort_by{|e| e[:created_at]}.paginate(:page => params[:page], :per_page => params[:size])
 		# chatroom_messages = @chatroom.messages.includes(:user).map{|x| x.slice('id', 'user_id', 'chatroom_id', 'content') }.order('created_at desc').paginate(:page => params[:page], :per_page => params[:size])
 		Message.update_unread_message_status @user, @chatroom
-		background = UsersChatroom.get_user_chatroom(@user, @chatroom).background
+		background = Background.find_by_id((UsersChatroom.get_user_chatroom(@user, @chatroom)).background_id)
+		# background = Background.find_by_id(UsersChatroom.get_user_chatroom(@user, @chatroom).background_id)
+
 		#new_background_instance = UsersChatroom
 
 		# my_read_msg = chatroom_messages.where("'?' = ANY (is_read)", @user.id).pluck(:id)

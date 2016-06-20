@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
 	# has_one :location, through: :users_location
 	has_and_belongs_to_many :locations, join_table: "users_locations"
 	before_destroy {locations.clear}
+	has_many :reports , dependent: :destroy
 	has_many :contact_us, dependent: :destroy
 	has_many :gadgets, dependent: :destroy
 	has_many :friends, dependent: :destroy
@@ -15,6 +16,7 @@ class User < ActiveRecord::Base
 	has_many :single_chat_messages, dependent: :destroy
 	# has_many :messages, through: :users_messages_chats
 	mount_uploader :image, AvatarUploader
+
 
 	validates_presence_of :fb_id
 	validates_uniqueness_of :username

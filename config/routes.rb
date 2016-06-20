@@ -6,8 +6,11 @@ Rails.application.routes.draw do
   get "change_user_status" => "apis/users#change_user_status"
   resources :users, :controller => "apis/users", only: [:create, :update, :show] do
     member do
+
       get "sign_out"
       get "get_background"
+      post "create_report"
+
       get "my_chatroom", controller: "apis/chatrooms"
       get "get_chatroom", controller: "apis/chatrooms"
       get "my_chatroom_messages", controller: "apis/chatrooms"

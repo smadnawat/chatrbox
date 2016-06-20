@@ -78,6 +78,14 @@ class Apis::UsersController < ApplicationController
 	# 	render json:{code:200, message: "successfully fetched usser's friends", my_friends: friends}
 
 	# end
+
+
+	# Report to admin for abusive behavior of other member user
+      
+      def create_report
+      	 user_report = Report.create(user_id: params[:id],member_id: params[:report][:member_id] ,content:params[:report][:content] ) 
+      	 get_response 200, "report successfully submitted"
+      end
 	
 	# private methods
 	private

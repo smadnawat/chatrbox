@@ -3,7 +3,8 @@ class Apis::FriendsController < ApplicationController
 	before_action :find_member
 	def send_message_to_friend
 		friend = Friend.find_friend(@user.id, params[:single_chat_message][:member_id])
-		Friend.create_friend @user.id, params[:member_id] if !friend
+		p "=============================#{friend.inspect}"
+		Friend.create_friend @user.id, params[:member_id] if friend.empty?
 		chat = SingleChatMessage.new(single_chat_message_params @user)
 		if chat.save
 			get_response 200, "message successfully sent"
@@ -12,15 +13,16 @@ class Apis::FriendsController < ApplicationController
 		end
 	end
 
-	def add_block_friend
-		friend = Friend.find_friend(@user.id, params[:member_id])
-		if (params[:friend] == "add")
-			friend.update(is_added: true)
-		else
-			friend.update(is_block: true)
-		end
-		get_response 200, "member successfully #{params[:friend]}ed"
-	end
+	# def add_block_friend
+	# 	# friend = Friend.find_friend(@user.id, params[:member_id])
+	# 	if (params[:friend] == "add")
+	# 		Friend.where('(user_id in (?) and member_id (?)) or (member_id(?) and user_id(?))',@user.id,@member.id,@user.id,@member.id )
+	# 		friend.update(is_added: true)
+	# 	else
+	# 		friend.update(is_block: true)
+	# 	end
+	# 	get_response 200, "member successfully #{params[:friend]}ed"
+	# end
 
 	def get_friend_messages
 		SingleChatMessage.update_read_status @user.id, params[:member_id]
@@ -35,15 +37,13 @@ class Apis::FriendsController < ApplicationController
 	end
 
 
-	def get_my_friends_list
-
+	# def get_my_friends_list
+ #        my_friends = 
 		
-	end
+	# end
 
 	private
 	def single_chat_message_params user
-
-		p "===========================#{@user.id}==========================="
 		params[:single_chat_message][:user_id] = @user.id
 		params[:single_chat_message][:member_id] = @member.id
 		params.require(:single_chat_message).permit(:member_id, :message, :media,:user_id)

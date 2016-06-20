@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
 		return get_response 500, "you are not authorise user to perform this action" if !@user.present?
 	end
 	def find_chatroom
-		@chatroom = Chatroom.find_chatroom(params[:chatroom_id]).first
+		 @chatroom = Chatroom.find_by_id(params[:chatroom_id])#.first
 		return get_response 500, "chatroom not found" if !@chatroom.present?
 	end
 	def find_member
