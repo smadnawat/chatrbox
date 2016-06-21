@@ -23,10 +23,14 @@ Rails.application.routes.draw do
       post "contact_us", controller: "apis/contacts"
 
       get 'get_friend_messages',controller: "apis/friends"
-      get 'change_single_chat_background',controller: "apis/friends"
-      get 'get_my_friends_list',controller: "apis/friends"
+      post 'change_single_chat_background',controller: "apis/friends"
+      get 'get_my_friend_list',controller: "apis/friends"
       post 'send_message_to_friend',controller: "apis/friends"
       post 'add_block_friend',controller: "apis/friends"
+      get 'get_blocked_friends',controller: "apis/friends"
+      post 'unblock_friend',controller: "apis/friends"
+
+
     end
     collection do
       post "login" 

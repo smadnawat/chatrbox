@@ -7,6 +7,7 @@ class SingleChatMessage < ActiveRecord::Base
   end
 
   def self.get_messages user, member, page, size
-  	where(member_id: user, user_id: member).order('created_at desc').paginate(:page => params[:page], :per_page => params[:size])
+  	where(member_id: member, user_id: user).order('created_at desc').paginate(:page =>page, :per_page =>size)
   end
+
 end

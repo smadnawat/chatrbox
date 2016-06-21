@@ -25,6 +25,28 @@ class User < ActiveRecord::Base
 		find_by(fb_id: id)
 	end
 
+  def self.group_chat_notification user,chatroom_id,message
+        chatroom=Chatroom.find_by_id(chatroom_id)
+        users=(chatroom.users)-Array(user)
+        users.each do |user|
+        @gadgets=user.gadgets
+        unless @gadgets.nil?
+              @gadgets.each do |gadget|
+               AndroidPushWorker.perform_async(gadget.gadget_id,"#{user.full_name} messaged #{message} in the #{chatroom.name}")
+              end         
+            end
+         end	
+    end
+
+	def self.single_chat_notification user,member,message
+         @gadgets=member.gadgets
+         unless @gadgets.nil?
+              @gadgets.each do |gadget|
+               AndroidPushWorker.perform_async(gadget.gadget_id,"#{user.full_name} sent you a message #{message}")
+              end         
+            end
+         end
+
 	def self.image_data(data)
     return nil unless data
     io = CarrierStringIO.new(Base64.decode64(data)) 
