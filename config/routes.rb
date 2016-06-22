@@ -17,18 +17,22 @@ Rails.application.routes.draw do
       get "chatroom_details", controller: "apis/chatrooms"
       get "leave_group", controller: "apis/chatrooms"
       get "change_chatroom_background", controller: "apis/chatrooms"
-      post "mute_chat", controller: "apis/chatrooms"
+      post "mute_chatroom", controller: "apis/chatrooms"
       post "create_chatroom_message", controller: "apis/chatrooms"
       post "add_chatroom", controller: "apis/chatrooms"
       post "contact_us", controller: "apis/contacts"
 
       get 'get_friend_messages',controller: "apis/friends"
-      post 'change_single_chat_background',controller: "apis/friends"
-      get 'get_my_friend_list',controller: "apis/friends"
-      post 'send_message_to_friend',controller: "apis/friends"
-      post 'add_block_friend',controller: "apis/friends"
+      get 'get_my_friend_list' ,controller: "apis/friends"
+      get 'search_friend' ,controller: "apis/friends"
+      get 'find_friendship' ,controller: "apis/friends"
+
       get 'get_blocked_friends',controller: "apis/friends"
-      post 'unblock_friend',controller: "apis/friends"
+      post 'change_single_chat_background',controller: "apis/friends"
+      post 'send_message_to_friend'       ,controller: "apis/friends"
+      post 'add_block_friend'             ,controller: "apis/friends"
+      post 'unblock_friend'               ,controller: "apis/friends"
+      post 'mute_single_chat'             ,controller: "apis/friends"
 
 
     end

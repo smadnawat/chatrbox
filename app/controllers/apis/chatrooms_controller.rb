@@ -19,7 +19,13 @@ class Apis::ChatroomsController < ApplicationController
 	# my chatroom list
 	def my_chatroom
 		chatroom = @user.chatrooms.includes(:messages).order('name asc').paginate(:page => params[:page], :per_page => params[:size])
-		chatroom = chatroom.map{|x| (x.slice('id', 'name', 'image').merge(last_message: x.messages.order('created_at desc').reverse.last.as_json(only: [:content]), unread_count: (x.messages.where("'?' != ANY (is_read)", @user.id).count) ) ) }.paginate(:page => params[:page], :per_page => params[:size])
+		chatroom = chatroom.map{|x| (x.slice('id', 'name', 'image')
+			       .merge(last_message: x.messages.order('created_at desc')
+			       .reverse.last.as_json(only: [:content]), 
+			         unread_count: (x.messages.reject{|m| m.is_read.include?("#{@user.id}") }).count)
+			         ) }
+                   .paginate(:page => params[:page],
+                   :per_page => params[:size])
 		render json: {code: 200, message: "successfully fetched my chatrooms", my_chatrooms: chatroom, pagination: Paging.set_page(params[:page], params[:size], chatroom ) }
 	end
 
@@ -77,7 +83,7 @@ class Apis::ChatroomsController < ApplicationController
 	end
 
 	# mute chat
-	def mute_chat
+	def mute_chatroom
 		target_chat = UsersChatroom.get_user_chatroom @user, @chatroom
 		return get_response 500, "you are no longer member for this chatroom"  if !target_chat
 		target_chat.update(is_notified: params[:is_mute])

@@ -1,12 +1,12 @@
 class Apis::FriendsController < ApplicationController
 	before_action :find_user
-	before_action :find_member ,except: [:get_my_friend_list,:get_blocked_friends]
+	before_action :find_member ,except: [:get_my_friend_list,:get_blocked_friends,:search_friend]
 
 
 
 	def send_message_to_friend
-			friend = Friend.find_friend(@user.id, @member.id)
-			Friend.create_friend @user.id, @member.id if friend.empty?
+			friend = Friend.find_by(user_id: @user.id, member_id: @member.id,is_added: true)
+			Friend.create_friend @user.id, @member.id if friend.present?
 			chat = SingleChatMessage.new(single_chat_message_params @user)
 		if chat.save
 			User.single_chat_notification(@user,@member,chat.message) 
@@ -16,6 +16,8 @@ class Apis::FriendsController < ApplicationController
 		end
 	end
 
+
+#add or block to user
 	def add_block_friend
 		if (params[:friend] == "add")
 			friend = Friend.where("(user_id = ? and member_id = ?) or (user_id = ? and member_id = ?) ", @user.id,@member.id,@member.id,@user.id).update_all(is_added: true)
@@ -45,9 +47,16 @@ class Apis::FriendsController < ApplicationController
 
  #get all my friend list
 	def get_my_friend_list
-		friends=Friend.friend_list(@user)
-        render json: {code: 200 , message: "successfully fetched friend list" , friend_list: friends.map{ |friend| friend.as_json(only: []).merge(name: User.find_by_id(friend.member_id).full_name,unread_count: SingleChatMessage.where(user_id: @user.id,member_id: friend.member_id,is_read: false).count) }}	
+		friends=Friend.friend_list(@user,params[:page],params[:size])
+       render json: {code: 200 , message: "successfully fetched friend list",friend_list: friends.map{ |friend| friend.as_json(only: [:id,:username,:image,:profile_status]).merge(unread_count: SingleChatMessage.where(user_id: friend.id,member_id: @user.id,is_read: false).count) },pagination: Paging.set_page(params[:page], params[:size], friends )}
 	end
+
+ #search friend
+    def search_friend
+       friends=Friend.search(@user,params[:username],params[:page],params[:size])
+       render json: {code: 200 , message: "successfully fetched friend list",friend_list: friends.map{ |friend| friend.as_json(only: [:id,:username,:image,:profile_status]).merge(unread_count: SingleChatMessage.where(user_id: friend.id,member_id: @user.id,is_read: false).count) },pagination: Paging.set_page(params[:page], params[:size], friends )}
+    end
+
   
  #get block listed users
     def get_blocked_friends
@@ -63,6 +72,23 @@ class Apis::FriendsController < ApplicationController
       friend.update_all(is_added: true)
       get_response 200, "#{@member.full_name} is successfully added to your friend list "
    end
+
+ #mute single chat
+
+  def mute_single_chat
+	  	Friend.find_by(user_id: @user.id , member_id: params[:member_id]).update(is_notified: false)
+	    get_response 200, "successfully updated"
+  end
+
+  def find_friendship
+  	  friend=Friend.find_by(user_id: @user.id , member_id: params[:member_id])
+  	  if friend.present?
+         render json: {code: 200 , is_friend: friend.is_added , message: "user is already added to your friend list"}	
+      else
+      	 render json: {code: 200 , is_friend: false , message: "user is not in your friend list "}	
+      end
+  end
+
 
  private
 	def single_chat_message_params user
