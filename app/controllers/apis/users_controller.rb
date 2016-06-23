@@ -83,7 +83,7 @@ class Apis::UsersController < ApplicationController
 	# Report to admin for abusive behavior of other member user
       
       def create_report
-      	 user_report = Report.create(user_id: params[:id],member_id: params[:report][:member_id] ,content:params[:report][:content] ) 
+      	 user_report = Report.create(user_id: params[:id],member_id: params[:member_id] ,content:params[:content] ) 
       	 get_response 200, "report successfully submitted"
       end
 	

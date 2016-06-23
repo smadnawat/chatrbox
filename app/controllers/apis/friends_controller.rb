@@ -6,7 +6,7 @@ class Apis::FriendsController < ApplicationController
 
 	def send_message_to_friend
 			friend = Friend.find_by(user_id: @user.id, member_id: @member.id,is_added: true)
-			Friend.create_friend @user.id, @member.id if friend.present?
+			Friend.create_friend @user.id, @member.id if friend.blank?
 			chat = SingleChatMessage.new(single_chat_message_params @user)
 		if chat.save
 			User.single_chat_notification(@user,@member,chat.message) 
@@ -19,7 +19,9 @@ class Apis::FriendsController < ApplicationController
 
 #add or block to user
 	def add_block_friend
-		if (params[:friend] == "add")
+	    friends = Friend.find_by(user_id: @user.id, member_id: @member.id)
+        Friend.create_friend @user.id, @member.id if friends.blank?
+        if (params[:friend] == "add")
 			friend = Friend.where("(user_id = ? and member_id = ?) or (user_id = ? and member_id = ?) ", @user.id,@member.id,@member.id,@user.id).update_all(is_added: true)
 		else
 		 friend = Friend.find_friend(@user.id, params[:member_id])
@@ -82,10 +84,11 @@ class Apis::FriendsController < ApplicationController
 
   def find_friendship
   	  friend=Friend.find_by(user_id: @user.id , member_id: params[:member_id])
+
   	  if friend.present?
-         render json: {code: 200 , is_friend: friend.is_added , message: "user is already added to your friend list"}	
+         render json: {code: 200 , is_friend: friend.is_added,is_blocked:friend.is_block ,profile: @member.image , username: @member.username}	
       else
-      	 render json: {code: 200 , is_friend: false , message: "user is not in your friend list "}	
+      	 render json: {code: 200 , is_friend: false , is_blocked: false,profile: @member.image , username: @member.username}	
       end
   end
 

@@ -17,6 +17,4 @@ class Message < ActiveRecord::Base
 		where('chatroom_id = ? and id NOT IN (?)', chatroom.id, my_read_msg).update_all(['is_read = is_read || ?::text', user.id])
 	end
 
-	
-
 end

@@ -51,7 +51,7 @@ class Apis::ChatroomsController < ApplicationController
 
 	# get my chatroom messages
 	def my_chatroom_messages
-		chatroom_messages = @chatroom.messages.includes(:user).map{|x| x.slice('id', 'user_id', 'chatroom_id', 'content' ,'created_at').merge(user: x.user.username) }.sort_by{|e| e[:created_at]}.paginate(:page => params[:page], :per_page => params[:size])
+		chatroom_messages = @chatroom.messages.includes(:user).map{|x| x.slice('id', 'user_id', 'chatroom_id', 'content').merge(user: x.user.username, created_at: x.created_at.to_i) }.sort_by{|e| e[:created_at]}.reverse.paginate(:page => params[:page], :per_page => params[:size])
 		# chatroom_messages = @chatroom.messages.includes(:user).map{|x| x.slice('id', 'user_id', 'chatroom_id', 'content') }.order('created_at desc').paginate(:page => params[:page], :per_page => params[:size])
 		Message.update_unread_message_status @user, @chatroom
 		background = Background.find_by_id((UsersChatroom.get_user_chatroom(@user, @chatroom)).background_id)
