@@ -25,24 +25,24 @@ class User < ActiveRecord::Base
 		find_by(fb_id: id)
 	end
 
-  def self.group_chat_notification user,chatroom_id,message
-        chatroom=Chatroom.find_by_id(chatroom_id)
-        users=(chatroom.users)-Array(user)
+  def self.group_chat_notification sender,message
+        chatroom=Chatroom.find_by_id(message.chatroom_id)
+        users=(chatroom.users)-Array(sender)
         users.each do |user|
         @gadgets=user.gadgets
         unless @gadgets.nil?
               @gadgets.each do |gadget|
-               AndroidPushWorker.perform_async(gadget.gadget_id,"#{user.full_name} messaged #{message} in the #{chatroom.name}")
+               AndroidPushWorker.perform_async(gadget.gadget_id,sender.username,message.id,message.content,message.user_id,message.chatroom_id,message.created_at.to_i,"GroupChat",nil)
               end         
             end
          end	
     end
 
-	def self.single_chat_notification user,member,message
+	def self.single_chat_notification sender,member,messages
          @gadgets=member.gadgets
          unless @gadgets.nil?
               @gadgets.each do |gadget|
-               AndroidPushWorker.perform_async(gadget.gadget_id,"#{user.full_name} sent you a message #{message}")
+               AndroidPushWorker.perform_async(gadget.gadget_id,sender.username,messages.id,messages.message,messages.user_id,messages.member_id,messages.created_at.to_i,"SingleChat",messages.media.url)
               end         
             end
          end

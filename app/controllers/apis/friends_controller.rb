@@ -9,8 +9,8 @@ class Apis::FriendsController < ApplicationController
 			Friend.create_friend @user.id, @member.id if friend.blank?
 			chat = SingleChatMessage.new(single_chat_message_params @user)
 		if chat.save
-			User.single_chat_notification(@user,@member,chat.message) 
-		    render json: {code: 200 , message: "message successfully sent" , is_mute: (Friend.find_by(user_id: @user.id,member_id: @member.id)).is_notified}	
+			User.single_chat_notification(@user,@member,chat) 
+		    render json: {code: 200 , message: "message successfully sent" , is_mute: (Friend.find_by(user_id: @user.id,member_id: @member.id)).is_notified , message: chat}	
         else
 			get_response 500, chat.errors.full_messages.first.capitalize.to_s.gsub('_',' ') + "."
 		end
@@ -36,8 +36,9 @@ class Apis::FriendsController < ApplicationController
 	def get_friend_messages
 		SingleChatMessage.update_read_status @user.id, params[:member_id]
 		messages = SingleChatMessage.get_messages(@user.id, params[:member_id], params[:page], params[:size])
+        
         background =Background.find_by_id(Friend.find_by(user_id: @user.id,member_id: params[:member_id]).background_id)
-        render json: {code: 200, message: "successfully fetched friends messages", friends_messages: messages,background: background.present? ? background : {}, pagination: Paging.set_page(params[:page], params[:size], messages ) }
+        render json: {code: 200, message: "successfully fetched friends messages", friends_messages: messages,background: background.present? ? background : {}, pagination: Paging.set_page(params[:page], params[:size] ) }
 	end
 
 #change single chat room background
@@ -86,9 +87,10 @@ class Apis::FriendsController < ApplicationController
   	  friend=Friend.find_by(user_id: @user.id , member_id: params[:member_id])
 
   	  if friend.present?
-         render json: {code: 200 , is_friend: friend.is_added,is_blocked:friend.is_block ,profile: @member.image , username: @member.username}	
+  	  	  background = Background.find_by(id: friend.background_id)
+         render json: {code: 200 , is_friend: friend.is_added,is_blocked:friend.is_block ,profile: @member.image.url , username: @member.username ,is_mute: friend.is_notified,background: background.present? ? background.image.url : {} }	
       else
-      	 render json: {code: 200 , is_friend: false , is_blocked: false,profile: @member.image , username: @member.username}	
+      	 render json: {code: 200 , is_friend: false , is_blocked: false,profile: @member.image.url , username: @member.username}	
       end
   end
 

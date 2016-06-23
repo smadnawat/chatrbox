@@ -40,9 +40,12 @@ class Apis::ChatroomsController < ApplicationController
 	def create_chatroom_message
        return get_response 200, "chatroom not found"  if !Chatroom.find_chatroom(params[:message][:chatroom_id]).present?
 		message = @user.messages.build(message_params @user)
+		
 		if message.save
-			 User.group_chat_notification(@user,params[:message][:chatroom_id],message.content)
-			render json: {code: 200, message: "successfully created", create_chatroom_message: message}
+			 p "=========#{message.inspect}"
+			 User.group_chat_notification(@user,message)
+			# message = message.slice('id','user_id','chatroom_id','content','media','is_read').merge(created_at: message.created_at.to_i)
+			render json: {code: 200, message: "successfully created", create_chatroom_message: message  }
 
 		else
 			get_response 500, message.errors.full_messages.first.capitalize.to_s.gsub('_',' ') + "."
@@ -63,7 +66,7 @@ class Apis::ChatroomsController < ApplicationController
 		# my_unread_messsages = 
 		# my_unread_messsages = chatroom_messages.merge(my_read_msg)
 		# my_unread_messsages.update_all(['is_read = is_read || ?::text', @user.id])
-		render json: {code: 200, message: "successfully fetched my chatrooms", chatroom_messages: chatroom_messages.reverse, background: background.present? ? background : {}, pagination: Paging.set_page(params[:page], params[:size], chatroom_messages ) }
+		render json: {code: 200, message: "successfully fetched my chatrooms", chatroom_messages: chatroom_messages.reverse, background: background.present? ? background.image.url : {}, pagination: Paging.set_page(params[:page], params[:size], chatroom_messages ) }
 	end
 
 	# chatrom details 
