@@ -13,7 +13,9 @@ class Message < ActiveRecord::Base
 	# end
 
 	def self.update_unread_message_status user, chatroom
-		my_read_msg = where("'?' = ANY (is_read) and chatroom_id = ?", user.id, chatroom.id).pluck(:id)
+		my_read_msg = where("'?' = ANY (is_read) and chatroom_id = ?", user.id, chatroom.id).pluck(:id) + [0]
+		p "========#{my_read_msg.inspect}======="
+		#un_read_msg = where("chatroom_id = ?",chatroom.id).reject{|message| message.is_read.include?"#{user.id}"} 
 		where('chatroom_id = ? and id NOT IN (?)', chatroom.id, my_read_msg).update_all(['is_read = is_read || ?::text', user.id])
 	end
 
