@@ -45,7 +45,7 @@ class Apis::FriendsController < ApplicationController
 	def change_single_chat_background
 		friend = Friend.find_friend(@user.id, params[:member_id])
 		friend.update_all(background_id: params[:background_id])
-		get_response 200, "successfully updated background"
+		render json: {code: 200, message: "successfully updated background", background: Background.find_by_id(params[:background_id]) }
 	end
 
  #get all my friend list
@@ -79,20 +79,40 @@ class Apis::FriendsController < ApplicationController
  #mute single chat
 
   def mute_single_chat
-	  	Friend.find_by(user_id: @user.id , member_id: params[:member_id]).update(is_notified: false)
+
+  	    @friend = Friend.find_by(user_id: @user.id , member_id: params[:member_id])
+  	    #@friend.is_notified ? @friend.update(is_notified:false) : @friend.update(is_notified: true)
+        @friend.update(is_notified: @friend.is_notified? ? false : true)
+	  	#Friend.find_by(user_id: @user.id , member_id: params[:member_id]).update(is_notified: false)
 	    get_response 200, "successfully updated"
   end
 
   def find_friendship
   	  friend=Friend.find_by(user_id: @user.id , member_id: params[:member_id])
-
   	  if friend.present?
-  	  	  background = Background.find_by(id: friend.background_id)
-         render json: {code: 200 , is_friend: friend.is_added,is_blocked:friend.is_block ,profile: @member.image.url , username: @member.username ,is_mute: friend.is_notified,background: background.present? ? background.image.url : {} }	
-      else
-      	 render json: {code: 200 , is_friend: false , is_blocked: false,profile: @member.image.url , username: @member.username}	
-      end
+		  	  	  background = Background.find_by(id: friend.background_id)
+		  	  	  @profile_details = Hash.new
+		          @profile_details = {
+		           	                    "is_friend" =>friend.is_added ,
+		           	                    "is_blocked" => friend.is_block ,
+		           	                    "profile" =>@member.image.url,
+		           	                    "username" => @member.username,
+		           	                    "is_mute" =>friend.is_notified ,
+		           	                    "background" => background.present? ? background.image.url : {} 
+		                              }
+		           render json: {code: 200 , profile_details: @profile_details.as_json ,message: "successfully fetched user details"}	
+	 else
+      	@user_details = Hash.new 
+      	@user_details = {
+                        "is_friend" => false,
+                        "is_blocked" => false ,
+                        "profile" => @member.image.url ,
+                        "username" => @member.username
+                        }
+      	 render json: {code: 200 , user_details: @user_details.as_json ,message: "successfully fetched user details"}	
+     end
   end
+
 
 
  private

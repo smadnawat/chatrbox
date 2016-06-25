@@ -1,6 +1,6 @@
 class Apis::ChatroomsController < ApplicationController
 	before_action :find_user
-	before_action :find_chatroom, only: [:change_chatroom_background, :mute_chat, :leave_group, :my_chatroom_messages, :chatroom_details]
+	before_action :find_chatroom, only: [:change_chatroom_background, :mute_chatroom, :leave_group, :my_chatroom_messages, :chatroom_details]
 	
 	# list of all chatroom from backend
 	def get_chatroom
@@ -19,7 +19,8 @@ class Apis::ChatroomsController < ApplicationController
 	# my chatroom list
 	def my_chatroom
 		chatroom = @user.chatrooms.includes(:messages).order('name asc').paginate(:page => params[:page], :per_page => params[:size])
-		chatroom = chatroom.map{|x| (x.slice('id', 'name', 'image')
+		chatroom = chatroom.map{
+			       |x| (x.slice('id', 'name', 'image')
 			       .merge(last_message: x.messages.order('created_at desc')
 			       .reverse.last.as_json(only: [:content]), 
 			         unread_count: (x.messages.reject{|m| m.is_read.include?("#{@user.id}") }).count)
@@ -89,6 +90,7 @@ class Apis::ChatroomsController < ApplicationController
 	def mute_chatroom
 		target_chat = UsersChatroom.get_user_chatroom @user, @chatroom
 		return get_response 500, "you are no longer member for this chatroom"  if !target_chat
+		 # target_chat.update(is_notified: target_chat.is_notified ? false : true) 
 		target_chat.update(is_notified: params[:is_mute])
 		get_response 200, "successfully updated"
 	end
