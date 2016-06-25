@@ -45,7 +45,8 @@ class Apis::FriendsController < ApplicationController
 	def change_single_chat_background
 		friend = Friend.find_friend(@user.id, params[:member_id])
 		friend.update_all(background_id: params[:background_id])
-		render json: {code: 200, message: "successfully updated background", background: Background.find_by_id(params[:background_id]) }
+		# render json: {code: 200, message: "successfully updated background", background: Background.find_by_id(params[:background_id]) }
+	    get_response 200 , "successfully updated "
 	end
 
  #get all my friend list
