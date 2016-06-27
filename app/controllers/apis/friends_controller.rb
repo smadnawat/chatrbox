@@ -38,7 +38,7 @@ class Apis::FriendsController < ApplicationController
 		messages = SingleChatMessage.get_messages(@user.id, params[:member_id], params[:page], params[:size])
         
         background =Background.find_by_id(Friend.find_by(user_id: @user.id,member_id: params[:member_id]).background_id)
-        render json: {code: 200, message: "successfully fetched friends messages", friends_messages: messages,background: background.present? ? background : {}, pagination: Paging.set_page(params[:page], params[:size] ) }
+        render json: {code: 200, message: "successfully fetched friends messages", friends_messages: messages,background: background.present? ? background : "", pagination: Paging.set_page(params[:page], params[:size] ) }
 	end
 
 #change single chat room background
@@ -51,14 +51,28 @@ class Apis::FriendsController < ApplicationController
 
  #get all my friend list
 	def get_my_friend_list
-		friends=Friend.friend_list(@user,params[:page],params[:size])
-       render json: {code: 200 , message: "successfully fetched friend list",friend_list: friends.map{ |friend| friend.as_json(only: [:id,:username,:image,:profile_status]).merge(unread_count: SingleChatMessage.where(user_id: friend.id,member_id: @user.id,is_read: false).count) },pagination: Paging.set_page(params[:page], params[:size], friends )}
+		friends=Friend.friend_list(@user) #,params[:page],params[:size])
+       #render json: {code: 200 , message: "successfully fetched friend list",friend_list: friends.map{ |friend| friend.as_json(only: [:id,:username,:image,:profile_status]).merge(unread_count: SingleChatMessage.where(user_id: friend.id,member_id: @user.id,is_read: false).count) },pagination: Paging.set_page(params[:page], params[:size], friends )}
+       render json: {code: 200 ,
+                      message: "successfully fetched friend list",
+                      friend_list: friends.map{ 
+                      	                        |friend| friend.as_json(only: [:id,:username,:image,:profile_status])
+                      	                         .merge(unread_count: SingleChatMessage.where(user_id: friend.id,member_id: @user.id,is_read: false).count) 
+                      	                         }}
+
 	end
 
  #search friend
     def search_friend
-       friends=Friend.search(@user,params[:username],params[:page],params[:size])
-       render json: {code: 200 , message: "successfully fetched friend list",friend_list: friends.map{ |friend| friend.as_json(only: [:id,:username,:image,:profile_status]).merge(unread_count: SingleChatMessage.where(user_id: friend.id,member_id: @user.id,is_read: false).count) },pagination: Paging.set_page(params[:page], params[:size], friends )}
+       #friends=Friend.search(@user,params[:username],params[:page],params[:size])
+       friends=Friend.search(@user,params[:username])
+       #render json: {code: 200 , message: "successfully fetched friend list",friend_list: friends.map{ |friend| friend.as_json(only: [:id,:username,:image,:profile_status]).merge(unread_count: SingleChatMessage.where(user_id: friend.id,member_id: @user.id,is_read: false).count) },pagination: Paging.set_page(params[:page], params[:size], friends )}
+       render json: {
+       	              code: 200 , message: "successfully fetched friend list",
+       	              friend_list: friends.map{ 
+       	                                       |friend| friend.as_json(only: [:id,:username,:image,:profile_status])
+       	                                       .merge(unread_count: SingleChatMessage.where(user_id: friend.id,member_id: @user.id,is_read: false).count) }}
+
     end
 
   
@@ -96,10 +110,10 @@ class Apis::FriendsController < ApplicationController
 		          @profile_details = {
 		           	                    "is_friend" =>friend.is_added ,
 		           	                    "is_blocked" => friend.is_block ,
-		           	                    "profile" =>@member.image.url,
+		           	                    "profile" =>@member.image.url.present? ? @member.image.url : "" ,
 		           	                    "username" => @member.username,
 		           	                    "is_mute" =>friend.is_notified ,
-		           	                    "background" => background.present? ? background.image.url : {} 
+		           	                    "background" => background.present? ? background.image.url : "" 
 		                              }
 		           render json: {code: 200 , profile_details: @profile_details.as_json ,message: "successfully fetched user details"}	
 	 else
@@ -107,8 +121,10 @@ class Apis::FriendsController < ApplicationController
       	@user_details = {
                         "is_friend" => false,
                         "is_blocked" => false ,
-                        "profile" => @member.image.url ,
-                        "username" => @member.username
+                        "profile" => @member.image.url.present? ? @member.image.url : "" ,
+                        "username" => @member.username ,
+                        "is_mute" => false ,
+                        "background" => ""
                         }
       	 render json: {code: 200 , user_details: @user_details.as_json ,message: "successfully fetched user details"}	
      end

@@ -10,11 +10,11 @@ class Friend < ActiveRecord::Base
   	where(member_id: member, user_id: user)
   end
 
-  def self.friend_list user,page,size
+  def self.friend_list user #,page,size
   	members = where(user_id: user.id, is_added: true, is_block: false)
     p "====mem==#{members.pluck(:member_id).inspect}"
     ids=members.pluck(:member_id)
-    User.where(id: ids).paginate(:page =>page, :per_page =>size)
+    User.where(id: ids)#.paginate(:page =>page, :per_page =>size)
     # p"======us====#{User.where(id: ids)}"
    end
 
@@ -22,10 +22,10 @@ class Friend < ActiveRecord::Base
   	where(user_id: user.id, is_block: true)
   end
 
-  def self.search user,username,page,size
+  def self.search user,username #,page,size
      members=where(user_id: user.id, is_added: true, is_block: false).pluck(:member_id)
      frinds=User.where(id: members)
-     frinds.where("username ILIKE (?)","#{username}%").paginate(:page =>page, :per_page =>size)
+     frinds.where("username ILIKE (?)","#{username}%")#.paginate(:page =>page, :per_page =>size)
   end
 
 
