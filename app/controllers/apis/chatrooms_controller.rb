@@ -66,7 +66,7 @@ class Apis::ChatroomsController < ApplicationController
 		# my_unread_messsages = 
 		# my_unread_messsages = chatroom_messages.merge(my_read_msg)
 		# my_unread_messsages.update_all(['is_read = is_read || ?::text', @user.id])
-		render json: {code: 200, message: "successfully fetched my chatrooms", chatroom_messages: chatroom_messages.reverse, background: background.present? ? background.image.url : {}, pagination: Paging.set_page(params[:page], params[:size], chatroom_messages ) }
+		render json: {code: 200, message: "successfully fetched my chatrooms", chatroom_messages: chatroom_messages.reverse, background: background.present? ? background.image.url : "", pagination: Paging.set_page(params[:page], params[:size], chatroom_messages ) }
 	end
 
 	# chatrom details 

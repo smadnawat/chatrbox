@@ -36,9 +36,16 @@ class Apis::FriendsController < ApplicationController
 	def get_friend_messages
 		SingleChatMessage.update_read_status @user.id, params[:member_id]
 		messages = SingleChatMessage.get_messages(@user.id, params[:member_id], params[:page], params[:size])
-        
+		friend_messages = messages.map{
+			                           |x| x.slice('id', 'user_id', 'member_id', 'message','media')
+			                                .merge!(username: User.find_by_id(x.user_id).username, 
+			                             	created_at: x.created_at.to_i) 
+			                          }
+			                          .sort_by{|e| e[:created_at]}
+			                          .reverse.paginate(:page => params[:page], :per_page => params[:size])
+
         background =Background.find_by_id(Friend.find_by(user_id: @user.id,member_id: params[:member_id]).background_id)
-        render json: {code: 200, message: "successfully fetched friends messages", friends_messages: messages,background: background.present? ? background : "", pagination: Paging.set_page(params[:page], params[:size] ) }
+        render json: {code: 200, message: "successfully fetched friends messages", friends_messages: friend_messages,background: background.present? ? background : "", pagination: Paging.set_page(params[:page], params[:size] ,messages) }
 	end
 
 #change single chat room background
@@ -52,12 +59,15 @@ class Apis::FriendsController < ApplicationController
  #get all my friend list
 	def get_my_friend_list
 		friends=Friend.friend_list(@user) #,params[:page],params[:size])
+
+
        #render json: {code: 200 , message: "successfully fetched friend list",friend_list: friends.map{ |friend| friend.as_json(only: [:id,:username,:image,:profile_status]).merge(unread_count: SingleChatMessage.where(user_id: friend.id,member_id: @user.id,is_read: false).count) },pagination: Paging.set_page(params[:page], params[:size], friends )}
        render json: {code: 200 ,
                       message: "successfully fetched friend list",
                       friend_list: friends.map{ 
-                      	                        |friend| friend.as_json(only: [:id,:username,:image,:profile_status])
-                      	                         .merge(unread_count: SingleChatMessage.where(user_id: friend.id,member_id: @user.id,is_read: false).count) 
+                      	                        |friend| friend.as_json(only: [:id,:full_name,:image,:profile_status])
+                      	                         .merge(unread_count: SingleChatMessage.where(user_id: friend.id,member_id: @user.id,is_read: false).count ,
+                      	                         	last_message:  SingleChatMessage.where(user_id: friend.id,member_id: @user.id).order('created_at desc').reverse.last.as_json(only: [:message])) 
                       	                         }}
 
 	end
