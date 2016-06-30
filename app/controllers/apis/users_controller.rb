@@ -64,20 +64,15 @@ class Apis::UsersController < ApplicationController
 		render json: {code: 200, message: "successfully fetched backgrounds",locations: get_locations.first, pagination: get_locations.last }
 	end
 
+
+
+
 	# call from admin panel to update user status
 	def change_user_status
 		User.where(id: params[:format]).first.update(is_active: params[:status])
 		redirect_to :back, :notice => "status updated successfully"
 	end
 
-
-	# #list of all user's friend
-
-	# def my_friends
-	# 	friends = Friends.where(user_id:  params[:id] , member_id: params[:id])
-	# 	render json:{code:200, message: "successfully fetched usser's friends", my_friends: friends}
-
-	# end
 
 
 	# Report to admin for abusive behavior of other member user
@@ -86,6 +81,8 @@ class Apis::UsersController < ApplicationController
       	 user_report = Report.create(user_id: params[:id],member_id: params[:member_id] ,content:params[:content] ) 
       	 get_response 200, "report successfully submitted"
       end
+	
+
 	
 	# private methods
 	private

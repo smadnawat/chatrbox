@@ -21,7 +21,8 @@ class Apis::ChatroomsController < ApplicationController
 		chatroom = @user.chatrooms.includes(:messages).order('name asc')#.paginate(:page => params[:page], :per_page => params[:size])
 		chatroom = chatroom.map{
 			       |x| (x.slice('id', 'name', 'image')
-			           .merge( last_message: x.messages.order('created_at desc').reverse.last.as_json(only: [:content]), 
+			           .merge( last_message:  x.messages.present? ? x.messages.order('created_at desc').reverse.last.as_json(only: [:content]) : "", 
+			           	#.merge( last_message: x.messages.order('created_at desc').reverse.last.as_json(only: [:content]), 
 			                unread_count: (x.messages.reject{|m| m.is_read.include?("#{@user.id}") }).count)
 			           ) 
 			        }
@@ -38,6 +39,8 @@ class Apis::ChatroomsController < ApplicationController
 		chatroom.update(background_id: params[:background_id])
 		get_response 200, "successfully updated background"
 	end
+
+	
 
 	# create chatroom messages
 	def create_chatroom_message
