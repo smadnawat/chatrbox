@@ -192,7 +192,7 @@ class Apis::FriendsController < ApplicationController
 	                        "is_friend" => false,
 	                        "is_blocked" => false ,
 	                        "profile" => @member.image.url.present? ? @member.image.url : "" ,
-	                        "username" => @member.username ,
+	                        "username" => @member.full_name ,
 	                        "is_mute" => false ,
 	                        "background" => ""
 	                        }
