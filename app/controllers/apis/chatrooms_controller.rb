@@ -60,7 +60,7 @@ class Apis::ChatroomsController < ApplicationController
 
 	# get my chatroom messages
 	def my_chatroom_messages
-		chatroom_messages = @chatroom.messages.includes(:user).map{|x| x.slice('id', 'user_id', 'chatroom_id', 'content').merge(user: x.user.username, created_at: x.created_at.to_i) }.sort_by{|e| e[:created_at]}.reverse.paginate(:page => params[:page], :per_page => params[:size])
+		chatroom_messages = @chatroom.messages.includes(:user).map{|x| x.slice('id', 'user_id', 'chatroom_id', 'content').merge(user: x.user.full_name, created_at: x.created_at.to_i) }.sort_by{|e| e[:created_at]}.reverse.paginate(:page => params[:page], :per_page => params[:size])
 		# chatroom_messages = @chatroom.messages.includes(:user).map{|x| x.slice('id', 'user_id', 'chatroom_id', 'content') }.order('created_at desc').paginate(:page => params[:page], :per_page => params[:size])
 		Message.update_unread_message_status @user, @chatroom
 		background = Background.find_by_id((UsersChatroom.get_user_chatroom(@user, @chatroom)).background_id)
@@ -77,7 +77,7 @@ class Apis::ChatroomsController < ApplicationController
 		chatroom_users = @chatroom.users.order('username asc')#.paginate(:page => params[:page], :per_page => params[:size])
 		user_chat = UsersChatroom.get_user_chatroom @user, @chatroom
 		render json: {code: 200, message: "successfully fetched my chatrooms", 
-		chatroom_details: @chatroom.as_json(only: [:id, :name, :image]).merge(users: chatroom_users.as_json(only: [:id, :username, :image]), is_mute: user_chat.is_notified ) }
+		chatroom_details: @chatroom.as_json(only: [:id, :name, :image]).merge(users: chatroom_users.as_json(only: [:id, :full_name, :image]), is_mute: user_chat.is_notified ) }
 	end
 
 	# leave this group
