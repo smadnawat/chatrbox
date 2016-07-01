@@ -1,9 +1,5 @@
 source 'https://rubygems.org'
 
-
-
-
-
 gem 'railroad', '~> 0.5.0'
 gem 'rails-erd'
 gem 'activeadmin', github: 'activeadmin'
