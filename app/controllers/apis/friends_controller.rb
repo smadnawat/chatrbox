@@ -67,7 +67,6 @@ class Apis::FriendsController < ApplicationController
 	def change_single_chat_background
 			friend = Friend.find_friend(@user.id, params[:member_id])
 			friend.update_all(background_id: params[:background_id])
-			# render json: {code: 200, message: "successfully updated background", background: Background.find_by_id(params[:background_id]) }
 		    get_response 200 , "successfully updated "
 	end
 
@@ -85,11 +84,11 @@ class Apis::FriendsController < ApplicationController
 	                      		unread_count: SingleChatMessage.where(
 	                      			user_id: friend.id,member_id: @user.id,is_read: false).count ,
 	                      			image: (friend.image.present? ? friend.image.url : "") ,
-	                      			last_message: last_msg.present? ? last_msg.message : ""
+	                      			last_message_content: last_msg.present? ? (last_msg.message) : "",
+	                      			last_message_media: last_msg.present? ? (last_msg.media.present? ? last_msg.media.url : "") : ""
 	                      			)                                              
 	                      	}
-	         #last_message = SingleChatMessage.where(user_id: friend.id,member_id: @user.id).order('created_at desc').reverse.last
-           
+	       
 	         #render json: {code: 200 , message: "successfully fetched friend list",friend_list: friends.map{ |friend| friend.as_json(only: [:id,:username,:image,:profile_status]).merge(unread_count: SingleChatMessage.where(user_id: friend.id,member_id: @user.id,is_read: false).count) },pagination: Paging.set_page(params[:page], params[:size], friends )}
 	        render json: { 
 	       	              code: 200 ,
