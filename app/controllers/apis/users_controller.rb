@@ -5,6 +5,7 @@ class Apis::UsersController < ApplicationController
 	def login
 		user = User.find_by_fb_id(params[:fb_id])
 		if user
+			user.update(authentication_token: Time.now.to_i.to_s+SecureRandom.hex)
 			Gadget.find_and_create_gadget(user, params[:gadget_id]) if params[:gadget_id].present?
 			render json: {code: 200, message: "successfully logged in", user: user.as_json.merge(is_exist: true) }
 		else
