@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
         @gadgets=user.gadgets
         unless @gadgets.nil?
               @gadgets.each do |gadget|
-               AndroidPushWorker.perform_async(gadget.gadget_id,sender.username,message.id,message.content,message.user_id,message.chatroom_id,message.created_at.to_i,"GroupChat",nil)
+               AndroidPushWorker.perform_async(gadget.gadget_id,sender.username,message.id,message.content,message.user_id,message.chatroom_id,message.created_at.to_i,"GroupChat",nil,chatroom.name)
               end         
             end
          end	
@@ -42,7 +42,7 @@ class User < ActiveRecord::Base
          @gadgets=member.gadgets
          unless @gadgets.nil?
               @gadgets.each do |gadget|
-               AndroidPushWorker.perform_async(gadget.gadget_id,sender.username,messages[:id],messages[:message],messages[:user_id],messages[:member_id],messages[:created_at],"SingleChat",messages[:media])
+               AndroidPushWorker.perform_async(gadget.gadget_id,sender.username,messages[:id],messages[:message],messages[:user_id],messages[:member_id],messages[:created_at],"SingleChat",messages[:media],nil)
               end         
             end
          end
